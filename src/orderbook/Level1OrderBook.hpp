@@ -1,6 +1,8 @@
 // State of order book
+#pragma once
 #include <iostream>
 #include <limits>
+
 class Level1OrderBook{
     public:
     double bestBidPrice;

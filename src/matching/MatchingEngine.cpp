@@ -1,19 +1,16 @@
-#include "Order.h"
-#include "Level1OrderBook.h"
+#include "MatchingEngine.hpp"
 #include <algorithm>
 #include <limits>
 
-class MatchingEngine{
-    public:
-    void processOrder(const Order& order, Level1OrderBook& book){
+
+    void MatchingEngine::processOrder(const Order& order, Level1OrderBook& book){
         if(order.side == Side::BUY){
             handleBuy(order, book);
         } else {
             handleSell(order,book);
         }
     }
-    private:
-    void handleBuy(const Order& order, Level1OrderBook& book){
+    void MatchingEngine::handleBuy(const Order& order, Level1OrderBook& book){
         if(order.orderType == OrderType::MARKET){
             executeBuy(order.quantity,book);
             return;
@@ -25,7 +22,7 @@ class MatchingEngine{
         }
     }
 
-    void handleSell(const Order& order, Level1OrderBook& book){
+    void MatchingEngine::handleSell(const Order& order, Level1OrderBook& book){
         if(order.orderType == OrderType::MARKET){
             executeSell(order.quantity,book);
             return;
@@ -37,7 +34,7 @@ class MatchingEngine{
         }
     }
 
-    void executeBuy(int qty, Level1OrderBook& book){
+    void MatchingEngine::executeBuy(int qty, Level1OrderBook& book){
         if(book.bestAskQuantity == 0){
             return;
         }
@@ -49,7 +46,7 @@ class MatchingEngine{
         }
     }
 
-    void executeSell(int qty, Level1OrderBook& book){
+    void MatchingEngine::executeSell(int qty, Level1OrderBook& book){
         if(book.bestBidQuantity == 0){
             return;
         }
@@ -61,17 +58,16 @@ class MatchingEngine{
         }
     }
 
-    void addLimitBuy(const Order& order,Level1OrderBook& book){
+    void MatchingEngine::addLimitBuy(const Order& order,Level1OrderBook& book){
         if(order.price > book.bestBidPrice){
             book.bestBidPrice = order.price;
             book.bestBidQuantity = order.quantity;
         }
     }
 
-    void addLimitSell(const Order& order,Level1OrderBook& book){
+    void MatchingEngine::addLimitSell(const Order& order,Level1OrderBook& book){
         if(order.price < book.bestAskPrice){
             book.bestAskPrice = order.price;
             book.bestAskQuantity = order.quantity;
         }
     }
-};
